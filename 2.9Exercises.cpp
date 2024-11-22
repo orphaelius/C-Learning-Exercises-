@@ -27,6 +27,7 @@ int main(void) {
 	int total = p + q + r;
 	printf("The sum of your variables is: %d\n", total);
 
+	// end program
 
 }
 
