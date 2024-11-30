@@ -10,24 +10,6 @@
 * where the '7' indicates that the subsequent 7 values are to be summed.
 */
 
-/*
-* initialize function
-* intialize variables
-* 
-* prompt
-* store value
-* 
-* while count <= input num
-* do
-* 
-* sum += input_num
-* 
-* average = sum / input_num
-* 
-* print output
-
-*/
-
 int main(void) {
 	int start_num = 0;
 	int input_numbers = 0;
