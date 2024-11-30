@@ -23,8 +23,7 @@ int main(void) {
 		// initialize the binary position to perform operations upon.
 		int binaryPosition = 7;
 
-		// loop to convert decimal number to binary by calculating the remainder and dividing by 2
-		// the storing the remainder in the binary array
+		// loop to convert decimal number to binary by calculating the remainder and dividing by 2		
 		while (decimalValue > 0 && binaryPosition >= 0) {   
 			bin[binaryPosition] = decimalValue % 2;   
 			decimalValue = decimalValue / 2; 
