@@ -11,20 +11,6 @@
 
   // 4.13 Natural Numbers Arithmetic //
 
-/*
-* 4.11 write a program to calculate and print the sum of
-* all multiples of 7 from 1 to 100
-* 
-* 4.12 write a program to calculate and print a list of 
-* all prime numbers from 1 to 100
-* 
-* 4.13 write a program that prints the sum, the sum of the
-* squares, and the sum of the cubes of all natural numbers 
-* from 1 to a number input by the user
-*/
-
-
-
 
 int main(void) {
 
@@ -34,15 +20,12 @@ int main(void) {
 			printf("%d is a multiple of 7.\n", counter);
 		}
 	}
-	printf("4.11 has ended...\n\n");
-
-	
+	printf("4.11 has ended...\n\n");	
 
 	// 4.12 //
 	int num = 2; // prime number begins at the number 2
 	int i = 2; 
 	int prime = 0; // prime variable, used for true/false
-
 
 	// main loop. increments counter (num) from 2 (prime beginning) to 100
 	for (num = 2; num <= 100; num++) {
@@ -55,7 +38,6 @@ int main(void) {
 
 			// if counter (num) divided by i has a remainder of zero, prime is false, break loop 
 			if (num % i == 0) { 
-
 				prime = 0; 
 				break;
 			}	
@@ -86,26 +68,16 @@ int main(void) {
 	scanf("%d", &input_num);
 
 	for (int n = 1; n <= input_num; n++) {
-		sum += n;		
-
+		sum += n;	
 		squares = pow(n, 2);
 		squares_sum += squares;
-
 		cubes = pow(n, 3);
 		cubes_sum += cubes; 
-
 	}
 	printf("the sum of the numbers 1 through %d is: %d\n", input_num, sum); 
 	printf("the sum of the squares of the numbers 1 through %d is: %d\n", input_num, squares_sum);
 	printf("the sum of the cubes of the numbers 1 through %d is: %d\n", input_num, cubes_sum); 
 	printf("4.13 has ended...\n");
-
-
-
-	
-
-
-
 }
 
 
