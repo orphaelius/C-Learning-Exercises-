@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 
-// intro exercsies for Ch. 4 //
+// intro exercises for Ch. 4 //
 
 /*
 * a) write a program to sum the odd integers between 1 and 99 using a for statement. use the integer variables 'sum' and 'count'
