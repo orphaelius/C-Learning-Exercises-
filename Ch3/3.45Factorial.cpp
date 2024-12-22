@@ -26,7 +26,7 @@ int main(void) {
 	// while loop that decrements an input number from input n to 1
 	// multiply input number by (input number - 1) (ie, 5 * 4, 3 * 2, etc)
 	// product equals first calculation times following calculation etc, decrementing to 1 
-	// example formula: n! = n × (n - 1) × (n - 2) × (n - 3) × ... × 1		
+	// example formula: n! = n Ã— (n - 1) Ã— (n - 2) Ã— (n - 3) Ã— ... Ã— 1		
 
 	printf("Enter a non-negative integer and I will print the product of its factorials: \n");
 	scanf("%d", &num); 	
