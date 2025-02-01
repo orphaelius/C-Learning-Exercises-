@@ -32,9 +32,7 @@ int main(void) {
 
 	printf("The unique elements from both arrays are:\n");
 	printElements(uniqueArr, uniqueCount);  
-
-	return 0;
-	
+	return 0;	
 }
 
 // Function to fill an array
@@ -43,18 +41,15 @@ int fillArray(int arr[], size_t size) {
 		printf("Enter element %zu: ", i +1);
 		scanf("%d", &arr[i]); 
 	}
-
 	return 0;
 }
 
 int uniqueElements(int arr1[], int arr2[], int uniqueArr[], size_t size) {
 	int uniqueCount = 0;
-
 	// Copies arr1 elements
 	for (size_t i = 0; i < size; ++i) {
 		uniqueArr[uniqueCount++] = arr1[i]; 
 	}
-
 	for (size_t i = 0; i < size; ++i) {
 		int isUnique = 1;
 		for (size_t j = 0; j < size; ++j) {
@@ -67,24 +62,12 @@ int uniqueElements(int arr1[], int arr2[], int uniqueArr[], size_t size) {
 		if (isUnique) {
 			uniqueArr[uniqueCount++] = arr2[i];
 		}
-	}
-
-	/*
-	for (int i = 0; i < size; ++i) {
-		for (int j = 0; j < size; ++j)
-			if (arr1[i] == arr2[j]) {
-				arr2[j] = 0;
-				arr1[i] = 0;
-			}
-	}
-	*/
-
+	}	
 	return uniqueCount; 
 } 
 
 int printElements(int arr[], size_t size) { 
-	for (int i = 0; i < size; ++i) { // Print any non-zero elements
-		 
+	for (int i = 0; i < size; ++i) { // Print any non-zero elements		 
 		if (arr[i] != 0) {
 			printf("%16d\n", arr[i]); 
 		}
