@@ -1,0 +1,187 @@
+// TEMP //
+
+// Total Sales //
+
+/*
+Use a two dimensional array. Company has four salespeople (1 to 4) who sell
+five different products (1 to 5). Once per day, each SP passes in a slip
+for each different type of product sold. each slip contains:
+1) the salesperson number
+2) the product number
+3) the total dollar value of that product sold that day
+
+Thus, each salesperson passes in between 0 and 5 slips per day. assume that
+the information from all the slips for the last month is available. write a
+program that reads all this sales info and summarizes the total sales by SP
+by product. all total sales should be stored in a 2d array [sales]. after
+processing all the info for the last month, print the results in tabular
+format with each column representing a particular salesperson for last
+month. your tabular output should include the cross totals to the right of
+the totaled rows and to the bottom of the totaled columns. */
+
+/* This program uses arrays to track, store, manipulate, and output
+   sales data for an [array] of salespeople.
+
+   Written by: Orphaelius
+   Date: 02/07/25 */
+
+
+
+
+   /*
+
+   -print loop for entering slips. cap at 5.
+   enter -1 to exit loop. float type. array
+   as argument, take salesperson number via switch statement,
+   each salesperson case asks for product number and total
+   sales product number, sales total in dollars.
+
+   scan function to take input from user (enter salesperson number,
+   product number, dollar value of product. Can only pass 0 to 5 slips
+   per day. cap input in function (if input times > 5, etc
+
+   print sales summary function, using sum array for SP. each
+   column represents a salesperson with their sales data. each column
+   should print salsperson data like number, products sold, sales per day,
+   and sales per month
+
+   float sales [4][5] = { {0, 0, 0, 0, 0},
+						  {0, 0, 0, 0, 0}
+						  {0, 0, 0, 0, 0}
+						  {0, 0, 0, 0, 0}
+						  {0, 0, 0, 0, 0} };
+   */
+
+#include <stdio.h>
+#define SALESPERSON 4
+#define PRODUCTS 5
+#define EOF -1 
+
+void displayDescrip(void);
+void printArray(int array[SALESPERSON][PRODUCTS]);
+int printSlipsMessage(int slips);
+int switchMessage(int key); 
+int printMonthlyDataMessage(int array[SALESPERSON][PRODUCTS]);
+int inputLoop(int sales[SALESPERSON][PRODUCTS],
+	int salesSummary[SALESPERSON][PRODUCTS], int key);
+int selectSalesperson(int salespersonID);
+int salespersonSales(int ID);  
+
+
+int main(void) {
+	// Initial 2D sales array
+	// Rows = salespeople, columns = product IDs
+	int sales[SALESPERSON][PRODUCTS] = { { 0, 0, 0, 0, 0 },
+										 { 0, 0, 0, 0, 0 },
+										 { 0, 0, 0, 0, 0 },
+										 { 0, 0, 0, 0, 0 } };
+
+	// Keeps monthly track of cumulative sales data for each 
+	// salesperson
+	int salesSummary[SALESPERSON][PRODUCTS] = { { 0, 0, 0, 0, 0 },
+												{ 0, 0, 0, 0, 0 },
+												{ 0, 0, 0, 0, 0 },
+												{ 0, 0, 0, 0, 0 } };
+
+	int slips = 5;
+	int switchKey = 0;
+
+	displayDescrip(); // Displays program description
+	// Displays instructions, collects switchKey 
+	switchKey = switchMessage(switchKey); 
+
+	while (switchKey != -1) { // Primary loop
+		inputLoop(sales, salesSummary, switchKey);  
+	}
+	
+
+
+
+}
+
+
+void displayDescrip(void) { // Prints intro description
+	puts("This program collects sales data for 4 salespeople.");
+}
+
+int switchMessage(int key) { // Prints message in SWITCH statement, returns switch key
+	int switchKey = 0;
+	printf("Enter (0) to input sales data, (1) to view monthly sales report, or (-1) to exit: ");
+	scanf("%d", &switchKey);
+	return switchKey;
+}
+
+// Iterates message in SLIP CASE, prints how many more entries can be submitted	
+int printSlipsMessage(int slips) {
+	printf("\nInput up to %d more slips.\n", slips);
+	return 0;
+}
+
+// Takes user input to determine salesperson ID
+int selectSalesperson(int salespersonID) {
+	printf("Which salesperson is this slip for? ");
+	scanf("%d");
+	return salespersonID;
+}
+
+/* Take salesperson ID, add slip details to salesperson (row) and
+product number (column). */
+int salespersonSales(int ID); 
+
+int printMonthlyDataMessage(int array[SALESPERSON][PRODUCTS]) {
+	printf("\n%60s", "----- MONTHLY REPORT -----\n\n");
+	for (int i = 0; i < SALESPERSON; i++) {
+		printf("%10s %d%10s", "Salesperson", i + 1, " ");
+	}
+	puts("");
+	return 0;
+}
+
+int inputLoop(int sales[SALESPERSON][PRODUCTS],
+	int salesSummary[SALESPERSON][PRODUCTS], int switchKey) {
+
+	int salespersonID = 0;
+	int slips = 5;
+
+	while (switchKey != EOF) {
+		switch (switchKey) {
+		case 0:
+			if (slips <= 0) { // decompose this
+				printf("Maximum slips submitted.\n");
+				break;
+			}
+			printSlipsMessage(slips);
+			salespersonID = selectSalesperson(salespersonID);  
+			salespersonSales(salespersonID);   
+
+			slips--;
+			break;
+
+		case 1:
+			printMonthlyDataMessage(salesSummary);
+			printArray(salesSummary);
+			break;
+
+		case '\n':
+			break;
+		case '\t':
+			break;
+		default:
+			break;
+
+		}
+		switchKey = switchMessage(switchKey);
+	}
+
+	return switchKey; 
+}
+
+void printArray(int array[SALESPERSON][PRODUCTS]) {
+	for (int i = 0; i < SALESPERSON; ++i) {
+		for (int j = 0; j < PRODUCTS; ++j) {
+			printf("%d ", array[i][j]);
+		}
+		puts("");
+	}
+}
+
