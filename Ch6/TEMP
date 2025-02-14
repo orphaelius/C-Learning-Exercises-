@@ -1,187 +1,205 @@
-// TEMP //
-
-// Total Sales //
+// Knight's Tour //
 
 /*
-Use a two dimensional array. Company has four salespeople (1 to 4) who sell
-five different products (1 to 5). Once per day, each SP passes in a slip
-for each different type of product sold. each slip contains:
-1) the salesperson number
-2) the product number
-3) the total dollar value of that product sold that day
+Can the knight chess piece move around an empty chessboard
+and touch each of the 64 squares only once?
 
-Thus, each salesperson passes in between 0 and 5 slips per day. assume that
-the information from all the slips for the last month is available. write a
-program that reads all this sales info and summarizes the total sales by SP
-by product. all total sales should be stored in a 2d array [sales]. after
-processing all the info for the last month, print the results in tabular
-format with each column representing a particular salesperson for last
-month. your tabular output should include the cross totals to the right of
-the totaled rows and to the bottom of the totaled columns. */
+the knight makes l-shaped moves (two in one directions, then one
+in perpendicular direction. thus, from a square in the middle of an
+empty chessboard, the knight can make eight different moves (0 -7),
 
-/* This program uses arrays to track, store, manipulate, and output
-   sales data for an [array] of salespeople.
+- board is represented as an 8*8 2d array (board)
+- each square is initialized to 0
+- a knight's move is described as having a horizontal element
+	and a vertical element (int horizontalMove, int verticalMove?)
+- currentRow and currentColumn indicate the row and column of the
+	knight's positioning. to make a move of type moveNumber, where
+	moveNumber is between 0 and 7, your program uses the statements:
 
-   Written by: Orphaelius
-   Date: 02/07/25 */
+	a) currentRow += vertical[moveNumber]
+	b) currentColumn += horizontal[moveNumber]
 
+- keep a counter that varies from 1 to 64. record the last count in
+	each square the knight moves to. remember to test each potential
+	move to see if the knight has already visited that square and
+	ensure the knight doesn't land off the chessboard
 
+- move te knight around the board!
 
-
-   /*
-
-   -print loop for entering slips. cap at 5.
-   enter -1 to exit loop. float type. array
-   as argument, take salesperson number via switch statement,
-   each salesperson case asks for product number and total
-   sales product number, sales total in dollars.
-
-   scan function to take input from user (enter salesperson number,
-   product number, dollar value of product. Can only pass 0 to 5 slips
-   per day. cap input in function (if input times > 5, etc
-
-   print sales summary function, using sum array for SP. each
-   column represents a salesperson with their sales data. each column
-   should print salsperson data like number, products sold, sales per day,
-   and sales per month
-
-   float sales [4][5] = { {0, 0, 0, 0, 0},
-						  {0, 0, 0, 0, 0}
-						  {0, 0, 0, 0, 0}
-						  {0, 0, 0, 0, 0}
-						  {0, 0, 0, 0, 0} };
-   */
+*/
 
 #include <stdio.h>
-#define SALESPERSON 4
-#define PRODUCTS 5
-#define EOF -1 
+#define ROWS 8 // Chessboard row count
+#define COLUMNS 8 // Chessboard column count
+#define OPTIONS 10 // Total options for instructions array
+#define CHARLIM 30 // Maximum characters allowed in string
+#define SINGLE 1 // Move one place
+#define DOUBLE 2 // Move two places
 
-void displayDescrip(void);
-void printArray(int array[SALESPERSON][PRODUCTS]);
-int printSlipsMessage(int slips);
-int switchMessage(int key); 
-int printMonthlyDataMessage(int array[SALESPERSON][PRODUCTS]);
-int inputLoop(int sales[SALESPERSON][PRODUCTS],
-	int salesSummary[SALESPERSON][PRODUCTS], int key);
-int selectSalesperson(int salespersonID);
-int salespersonSales(int ID);  
-
+// Function prototypes
+void displayDescription(void); // Obvious
+// Displays instructions
+void displayInstructions(char array[OPTIONS][CHARLIM]);
+int getSwitchKey(int* key); // Get the key
+// Moves knigh around chessboard in an array of directions
+void moveDirection(int array[ROWS][COLUMNS], int* knightX, int* knightY, int key); 
+void printChessboard(int array[ROWS][COLUMNS], int* knightX, int* knightY);
 
 int main(void) {
-	// Initial 2D sales array
-	// Rows = salespeople, columns = product IDs
-	int sales[SALESPERSON][PRODUCTS] = { { 0, 0, 0, 0, 0 },
-										 { 0, 0, 0, 0, 0 },
-										 { 0, 0, 0, 0, 0 },
-										 { 0, 0, 0, 0, 0 } };
+	// 2D "chessboard" 
+	int board[ROWS][COLUMNS] = { 0 };
+	// Instructions for user input/knight movement
+	char instructions[OPTIONS][CHARLIM] =
+	{ "(0) to move north 1, east 2",
+	  "(1) to move north 2, east 1",
+	  "(2) to move north 2, west 1",
+	  "(3) to move north 1, west 2",
+	  "(4) to move south 1, west 2",
+	  "(5) to move south 2, west 1",
+	  "(6) to move south 2, east 1",
+	  "(7) to move south 1, east 2",
+	  "(-1) to exit",
+	  "(9) to print the chessboard"};
 
-	// Keeps monthly track of cumulative sales data for each 
-	// salesperson
-	int salesSummary[SALESPERSON][PRODUCTS] = { { 0, 0, 0, 0, 0 },
-												{ 0, 0, 0, 0, 0 },
-												{ 0, 0, 0, 0, 0 },
-												{ 0, 0, 0, 0, 0 } };
+	int knightX = 4; // Position in row
+	int knightY = 4; // Position in column
+	board[knightX][knightY] = 1;
+	int key = 0; // Switch key
 
-	int slips = 5;
-	int switchKey = 0;
-
-	displayDescrip(); // Displays program description
-	// Displays instructions, collects switchKey 
-	switchKey = switchMessage(switchKey); 
-
-	while (switchKey != -1) { // Primary loop
-		inputLoop(sales, salesSummary, switchKey);  
-	}
-	
+	displayDescription();
+	displayInstructions(instructions);
 
 
+	while ((key == getSwitchKey(&key)) != -1) {
 
-}
+		switch (key) {
 
-
-void displayDescrip(void) { // Prints intro description
-	puts("This program collects sales data for 4 salespeople.");
-}
-
-int switchMessage(int key) { // Prints message in SWITCH statement, returns switch key
-	int switchKey = 0;
-	printf("Enter (0) to input sales data, (1) to view monthly sales report, or (-1) to exit: ");
-	scanf("%d", &switchKey);
-	return switchKey;
-}
-
-// Iterates message in SLIP CASE, prints how many more entries can be submitted	
-int printSlipsMessage(int slips) {
-	printf("\nInput up to %d more slips.\n", slips);
-	return 0;
-}
-
-// Takes user input to determine salesperson ID
-int selectSalesperson(int salespersonID) {
-	printf("Which salesperson is this slip for? ");
-	scanf("%d");
-	return salespersonID;
-}
-
-/* Take salesperson ID, add slip details to salesperson (row) and
-product number (column). */
-int salespersonSales(int ID); 
-
-int printMonthlyDataMessage(int array[SALESPERSON][PRODUCTS]) {
-	printf("\n%60s", "----- MONTHLY REPORT -----\n\n");
-	for (int i = 0; i < SALESPERSON; i++) {
-		printf("%10s %d%10s", "Salesperson", i + 1, " ");
-	}
-	puts("");
-	return 0;
-}
-
-int inputLoop(int sales[SALESPERSON][PRODUCTS],
-	int salesSummary[SALESPERSON][PRODUCTS], int switchKey) {
-
-	int salespersonID = 0;
-	int slips = 5;
-
-	while (switchKey != EOF) {
-		switch (switchKey) {
-		case 0:
-			if (slips <= 0) { // decompose this
-				printf("Maximum slips submitted.\n");
-				break;
-			}
-			printSlipsMessage(slips);
-			salespersonID = selectSalesperson(salespersonID);  
-			salespersonSales(salespersonID);   
-
-			slips--;
+		case 0:  
+			moveDirection(board, &knightX, &knightY, key);
 			break;
-
 		case 1:
-			printMonthlyDataMessage(salesSummary);
-			printArray(salesSummary);
+			moveDirection(board, &knightX, &knightY, key);
 			break;
-
-		case '\n':
+		case 2:
+			moveDirection(board, &knightX, &knightY, key);
 			break;
-		case '\t':
+		case 3:
+			moveDirection(board, &knightX, &knightY, key);
 			break;
-		default:
+		case 4:
+			moveDirection(board, &knightX, &knightY, key);
 			break;
-
+		case 5:
+			moveDirection(board, &knightX, &knightY, key);
+			break;
+		case 6:
+			moveDirection(board, &knightX, &knightY, key);
+			break;
+		case 7:
+			moveDirection(board, &knightX, &knightY, key);  
+			break;
+		case 9:
+			printChessboard(board, &knightX, &knightY); 
+			break;
 		}
-		switchKey = switchMessage(switchKey);
+
+		displayInstructions(instructions);
 	}
+} // End main
 
-	return switchKey; 
-}
+void displayDescription(void) {
+	printf("%s %s\n", "Move your knight around an otherwise empty chessboard using",
+		"various prompts.");
+} // End displayDescription
 
-void printArray(int array[SALESPERSON][PRODUCTS]) {
-	for (int i = 0; i < SALESPERSON; ++i) {
-		for (int j = 0; j < PRODUCTS; ++j) {
-			printf("%d ", array[i][j]);
+void displayInstructions(char array[OPTIONS][CHARLIM]) {
+	puts("\nChoose from the options below:");
+	for (size_t i = 0; i < OPTIONS; ++i) {
+		for (size_t j = 0; j < CHARLIM; ++j) {
+			printf("%c", array[i][j]);
 		}
 		puts("");
 	}
+	printf("Input: ");
+} // End displayInstructions
+
+int getSwitchKey(int* key) {
+	scanf("%d", key);
+	return *key;
+} // End getSwitchKey
+
+void moveDirection(int array[ROWS][COLUMNS], int* knightX, int* knightY, int key) {
+	array[*knightX][*knightY] = 0;
+	/*
+
+
+	  
+	  
+	  
+	 
+	  
+	  "(7) to move south 1, east 2",
+	*/
+
+
+	if (key == 0) {	// North 1, East 2 // 	
+		(*knightX)--; // North 1 		
+		for (int i = 0; i < DOUBLE; ++i) {
+			(*knightY)++; // East 2
+		}		
+	}
+	else if (key == 1) { // North 2, East 1 // 
+		for (int i = 0; i < DOUBLE; ++i) {
+			(*knightX)--; 
+		}			
+		(*knightY)++;
+	} 
+	else if (key == 2) { // North 2, West 1 // 
+		for (int i = 0; i < DOUBLE; ++i) { 
+			(*knightX)--;
+		}		
+		(*knightY)--; 
+	} 
+	else if (key == 3) { // North 1, West 2 // 
+		(*knightX)--; 		
+		for (int i = 0; i < DOUBLE; ++i) { 
+			(*knightY)--;
+		}
+	}
+	else if (key == 4) { // South 1, West 2 // 
+		(*knightX)++;
+		for (int i = 0; i < DOUBLE; ++i) {
+			(*knightY)--;
+		}
+	}
+	else if (key == 5) { // South 2, West 1 // 		
+		for (int i = 0; i < DOUBLE; ++i) {
+			(*knightX)++; 
+		}
+		(*knightY)--;
+	}
+	else if (key == 6) { // South 2, East 1 // 		
+		for (int i = 0; i < DOUBLE; ++i) {
+			(*knightX)++;
+		}
+		(*knightY)++;
+	}
+	else { // South 1, East 2 // 		
+		(*knightX)++;
+		for (int i = 0; i < DOUBLE; ++i) {
+			(*knightY)++; 
+		}		
+	}
+	array[*knightX][*knightY] = 1;	
+}
+
+void printChessboard(int array[ROWS][COLUMNS], int* knightX, int* knightY) {
+	for (size_t i = 0; i < ROWS; ++i) {
+		for (size_t j = 0; j < COLUMNS; ++j) {
+			printf("%d ", array[i][j]);
+		}
+		puts("");			
+	}
+
 }
 
