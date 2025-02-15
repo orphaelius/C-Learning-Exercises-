@@ -31,7 +31,7 @@ empty chessboard, the knight can make eight different moves (0 -7),
 #include <stdio.h>
 #define ROWS 8 // Chessboard row count
 #define COLUMNS 8 // Chessboard column count
-#define OPTIONS 10 // Total options for instructions array
+#define OPTIONS 11 // Total options for instructions array
 #define CHARLIM 30 // Maximum characters allowed in string
 #define SINGLE 1 // Move one place
 #define DOUBLE 2 // Move two places
@@ -42,12 +42,15 @@ void displayDescription(void); // Obvious
 void displayInstructions(char array[OPTIONS][CHARLIM]);
 int getSwitchKey(int* key); // Get the key
 // Moves knigh around chessboard in an array of directions
-void moveDirection(int array[ROWS][COLUMNS], int* knightX, int* knightY, int key); 
+void moveDirection(int board[ROWS][COLUMNS], int beenHere[ROWS][COLUMNS], int* knightX, int* knightY, int key);
 void printChessboard(int array[ROWS][COLUMNS], int* knightX, int* knightY);
+void hasVisited(int array[ROWS][COLUMNS], int* knightX, int* knightY);
 
 int main(void) {
 	// 2D "chessboard" 
 	int board[ROWS][COLUMNS] = { 0 };
+	// Board to track all "squares" the knight has visited
+	int beenHere[ROWS][COLUMNS] = { 0 }; 
 	// Instructions for user input/knight movement
 	char instructions[OPTIONS][CHARLIM] =
 	{ "(0) to move north 1, east 2",
@@ -59,47 +62,50 @@ int main(void) {
 	  "(6) to move south 2, east 1",
 	  "(7) to move south 1, east 2",
 	  "(-1) to exit",
-	  "(9) to print the chessboard"};
+	  "(9) to print the chessboard",
+	  "(10) to print beenHere" };
 
-	int knightX = 4; // Position in row
-	int knightY = 4; // Position in column
+	int knightX = 4; // Row number
+	int knightY = 4; // Column number
 	board[knightX][knightY] = 1;
 	int key = 0; // Switch key
 
 	displayDescription();
 	displayInstructions(instructions);
 
-
 	while ((key == getSwitchKey(&key)) != -1) {
 
 		switch (key) {
 
-		case 0:  
-			moveDirection(board, &knightX, &knightY, key);
+		case 0:
+			moveDirection(board, beenHere, &knightX, &knightY, key);
 			break;
 		case 1:
-			moveDirection(board, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key);
 			break;
 		case 2:
-			moveDirection(board, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key);
 			break;
 		case 3:
-			moveDirection(board, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key);
 			break;
 		case 4:
-			moveDirection(board, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key);
 			break;
 		case 5:
-			moveDirection(board, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key);
 			break;
 		case 6:
-			moveDirection(board, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key);
 			break;
 		case 7:
-			moveDirection(board, &knightX, &knightY, key);  
+			moveDirection(board, beenHere, &knightX, &knightY, key); 
 			break;
 		case 9:
-			printChessboard(board, &knightX, &knightY); 
+			printChessboard(board, &knightX, &knightY);
+			break;
+		case 10:
+			printChessboard(beenHere, &knightX, &knightY); 
 			break;
 		}
 
@@ -107,11 +113,25 @@ int main(void) {
 	}
 } // End main
 
+/******************************************************************************
+	Function: displayDescription()
+	Description: Prints instructions for playing the game
+	Side Effects: ---
+	Parameters: ---
+	Return: ---
+******************************************************************************/
 void displayDescription(void) {
 	printf("%s %s\n", "Move your knight around an otherwise empty chessboard using",
 		"various prompts.");
 } // End displayDescription
 
+/******************************************************************************
+	Function: displayInstructions()
+	Description: Prints instructions for playing the game
+	Side Effects: ---
+	Parameters: char array instructions[][], array for instruction strings
+	Return: ---
+******************************************************************************/
 void displayInstructions(char array[OPTIONS][CHARLIM]) {
 	puts("\nChoose from the options below:");
 	for (size_t i = 0; i < OPTIONS; ++i) {
@@ -123,83 +143,122 @@ void displayInstructions(char array[OPTIONS][CHARLIM]) {
 	printf("Input: ");
 } // End displayInstructions
 
+/******************************************************************************
+	Function: getSwitchKey()
+	Description: Grabs switch key
+	Side Effects: Points to "key" value, changes it
+	Parameters: Pointer to "key"
+	Return: key
+******************************************************************************/
 int getSwitchKey(int* key) {
 	scanf("%d", key);
 	return *key;
 } // End getSwitchKey
 
-void moveDirection(int array[ROWS][COLUMNS], int* knightX, int* knightY, int key) {
-	array[*knightX][*knightY] = 0;
-	/*
+/******************************************************************************
+	Function: moveDirection()
+	Description: Moves knight in a particular direction depending on input
+	Side Effects: Changes current position of knight on chessboard, resets 
+		former position by resetting place to "0"
+	Parameters: chessboard array, pointers to knightX and knightY, switch key
+	Return: ---
+******************************************************************************/
+void moveDirection(int board[ROWS][COLUMNS], int beenHere[ROWS][COLUMNS], int* knightX, int* knightY, int key) {
 
-
-	  
-	  
-	  
-	 
-	  
-	  "(7) to move south 1, east 2",
-	*/
-
+	board[*knightX][*knightY] = 0; // Reset currently position	
 
 	if (key == 0) {	// North 1, East 2 // 	
+		hasVisited(beenHere, knightX, knightY);
+
 		(*knightX)--; // North 1 		
 		for (int i = 0; i < DOUBLE; ++i) {
 			(*knightY)++; // East 2
 		}		
 	}
 	else if (key == 1) { // North 2, East 1 // 
+		hasVisited(beenHere, knightX, knightY);  
 		for (int i = 0; i < DOUBLE; ++i) {
-			(*knightX)--; 
-		}			
-		(*knightY)++;
-	} 
+			(*knightX)--;
+		}
+		(*knightY)++;				
+	}
 	else if (key == 2) { // North 2, West 1 // 
+		hasVisited(beenHere, knightX, knightY); 
 		for (int i = 0; i < DOUBLE; ++i) { 
 			(*knightX)--;
-		}		
-		(*knightY)--; 
-	} 
-	else if (key == 3) { // North 1, West 2 // 
-		(*knightX)--; 		
-		for (int i = 0; i < DOUBLE; ++i) { 
-			(*knightY)--;
 		}
+		(*knightY)--;				
+	}
+	else if (key == 3) { // North 1, West 2 // 	
+		hasVisited(beenHere, knightX, knightY);  
+		(*knightX)--;
+		for (int i = 0; i < DOUBLE; ++i) {
+			(*knightY)--;
+		}				
 	}
 	else if (key == 4) { // South 1, West 2 // 
+		hasVisited(beenHere, knightX, knightY); 
 		(*knightX)++;
 		for (int i = 0; i < DOUBLE; ++i) {
 			(*knightY)--;
-		}
+		}		
 	}
-	else if (key == 5) { // South 2, West 1 // 		
-		for (int i = 0; i < DOUBLE; ++i) {
-			(*knightX)++; 
-		}
-		(*knightY)--;
-	}
-	else if (key == 6) { // South 2, East 1 // 		
+	else if (key == 5) { // South 2, West 1 // 	
+		hasVisited(beenHere, knightX, knightY); 
 		for (int i = 0; i < DOUBLE; ++i) {
 			(*knightX)++;
 		}
-		(*knightY)++;
+		(*knightY)--;			
 	}
-	else { // South 1, East 2 // 		
+	else if (key == 6) { // South 2, East 1 // 	
+		hasVisited(beenHere, knightX, knightY); 
+		for (int i = 0; i < DOUBLE; ++i) {
+			(*knightX)++;
+		}
+		(*knightY)++;				
+	}
+	else { // South 1, East 2 // 	
+		hasVisited(beenHere, knightX, knightY);
 		(*knightX)++;
 		for (int i = 0; i < DOUBLE; ++i) {
-			(*knightY)++; 
-		}		
+			(*knightY)++;
+		}				
 	}
-	array[*knightX][*knightY] = 1;	
+	board[*knightX][*knightY] = 1;	 
 }
 
+/******************************************************************************
+	Function: hasVisited()
+	Description: Keep track of every position knight has visited on the board
+	Side Effects: Changes hasBeen array elements to 1 if visited
+	Parameters: board array, hasBeen array
+	Return: NOT SURE YET
+******************************************************************************/
+
+void hasVisited(int beenHere[ROWS][COLUMNS], int* knightX, int* knightY) {
+	for (int track = 0; track < 3; ++track) {
+		beenHere[*knightX][*knightY] = 1;  
+	}
+}
+
+
+
+
+
+
+/******************************************************************************
+	Function: printChessboard()
+	Description: Prints current knight position on the chessboard
+	Side Effects: ---
+	Parameters: board array, pointers to knightX and knightY
+	Return: ---
+******************************************************************************/
 void printChessboard(int array[ROWS][COLUMNS], int* knightX, int* knightY) {
 	for (size_t i = 0; i < ROWS; ++i) {
 		for (size_t j = 0; j < COLUMNS; ++j) {
 			printf("%d ", array[i][j]);
 		}
-		puts("");			
+		puts("");
 	}
 
 }
-
