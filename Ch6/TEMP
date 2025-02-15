@@ -1,8 +1,6 @@
 // Knight's Tour //
 
 /*
-
-
 	a) currentRow += vertical[moveNumber]
 	b) currentColumn += horizontal[moveNumber]
 
@@ -27,11 +25,15 @@
 void displayDescription(void); // Obvious
 // Displays instructions
 void displayInstructions(char array[OPTIONS][CHARLIM]);
-int getSwitchKey(int* key); // Get the key
-// Moves knigh around chessboard in an array of directions
-void moveDirection(int board[ROWS][COLUMNS], int beenHere[ROWS][COLUMNS], int* knightX, int* knightY, int key);
+int getSwitchKey(int* key); // Get the key. We gotta get out of here..
+// Moves knight around chessboard in an array of directions
+void moveDirection(int board[ROWS][COLUMNS], int beenHere[ROWS][COLUMNS], 
+	int* knightX, int* knightY, int key, int* newPositionCounter); 
+// Prints the current state of the chessboard
 void printChessboard(int array[ROWS][COLUMNS], int* knightX, int* knightY);
-void hasVisited(int array[ROWS][COLUMNS], int* knightX, int* knightY);
+// Tracks every "square" the knight lands upon
+void hasVisited(int array[ROWS][COLUMNS], int* knightX, int* knightY, int* newPositionCounter);
+void countNewCoords(int* newPositionCounter); 
 
 int main(void) {
 	// 2D "chessboard" 
@@ -54,8 +56,10 @@ int main(void) {
 
 	int knightX = 4; // Row number
 	int knightY = 4; // Column number
-	board[knightX][knightY] = 1;
+	board[knightX][knightY] = 1; // Starting position for knight!
+	beenHere[knightX][knightY] = 1; // Ensures initial position is tracked
 	int key = 0; // Switch key
+	int newPositionCounter = 0;  
 
 	displayDescription();
 	displayInstructions(instructions);
@@ -65,28 +69,28 @@ int main(void) {
 		switch (key) {
 
 		case 0:
-			moveDirection(board, beenHere, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key, &newPositionCounter);
 			break;
 		case 1:
-			moveDirection(board, beenHere, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key, &newPositionCounter);
 			break;
 		case 2:
-			moveDirection(board, beenHere, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key, &newPositionCounter);
 			break;
 		case 3:
-			moveDirection(board, beenHere, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key, &newPositionCounter);
 			break;
 		case 4:
-			moveDirection(board, beenHere, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key, &newPositionCounter);
 			break;
 		case 5:
-			moveDirection(board, beenHere, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key, &newPositionCounter);
 			break;
 		case 6:
-			moveDirection(board, beenHere, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key, &newPositionCounter); 
 			break;
 		case 7:
-			moveDirection(board, beenHere, &knightX, &knightY, key);
+			moveDirection(board, beenHere, &knightX, &knightY, key, &newPositionCounter);
 			break;
 		case 9:
 			printChessboard(board, &knightX, &knightY);
@@ -144,18 +148,21 @@ int getSwitchKey(int* key) {
 
 /******************************************************************************
 	Function: moveDirection()
-	Description: Moves knight in a particular direction depending on input
+	Description: Moves knight in a particular direction depending on input or
+		block a potential move if end result is beyond the array bounds
 	Side Effects: Resets former position of knight by resetting place to "0",
-		changes current position of knight on "chessboard"
+		changes current position of knight on "chessboard", and updates the
+		beenHere array
 	Parameters: chessboard array, pointers to knightX and knightY, switch key
 	Return: ---
 ******************************************************************************/
-void moveDirection(int board[ROWS][COLUMNS], int beenHere[ROWS][COLUMNS], int* knightX, int* knightY, int key) {
-
+void moveDirection(int board[ROWS][COLUMNS], int beenHere[ROWS][COLUMNS], 
+	int* knightX, int* knightY, int key, int* newPositionCounter) {
+	 
 	board[*knightX][*knightY] = 0; // Reset currently position	
-	hasVisited(beenHere, knightX, knightY);
+	
 	int dx = 0; // "Delta" for row
-	int dy = 0; // "Delat" for column
+	int dy = 0; // "Delta" for column
 
 	switch (key) {
 
@@ -184,11 +191,24 @@ void moveDirection(int board[ROWS][COLUMNS], int beenHere[ROWS][COLUMNS], int* k
 		dx = 1; dy = 2;
 		break;
 	}
-	// Knight position in row = dx values added to
-	// current position (and same formula for column position)
-	*knightX += dx; 
-	*knightY += dy;
-	board[*knightX][*knightY] = 1; // Value on board = 1
+
+	// Used to ensure moves are not out of bounds
+	int potentialX = *knightX + dx;
+	int potentialY = *knightY + dy;
+	
+	if (potentialX >= 0 && potentialX < ROWS && potentialY >= 0 
+		&& potentialY < COLUMNS) {
+		// Knight position in row = dx values added to
+		// current position (and same formula for column position)
+		*knightX += dx; 
+		*knightY += dy;
+		board[*knightX][*knightY] = 1; // Value on board = 1
+		hasVisited(beenHere, knightX, knightY, newPositionCounter); // Updates beenHere array 
+		
+	}
+	else { // Get back over there!
+		printf("Knight would move off the board!\n");
+	}	
 } // End moveDirection
 
 /******************************************************************************
@@ -196,13 +216,32 @@ void moveDirection(int board[ROWS][COLUMNS], int beenHere[ROWS][COLUMNS], int* k
 	Description: Keep track of every position knight has visited on the board
 	Side Effects: Changes hasBeen array elements to 1 if visited
 	Parameters: board array, hasBeen array
+	Return: ---
+******************************************************************************/
+void hasVisited(int beenHere[ROWS][COLUMNS], int* knightX, int* knightY, int* newPositionCounter) { 
+	
+	if (beenHere[*knightX][*knightY] == 0) {
+		(*newPositionCounter)++; 
+		printf("New space counter: %d\n", *newPositionCounter); 
+	}
+	else {
+		printf("Knight has been here already.\n");
+	}
+	beenHere[*knightX][*knightY] = 1;
+} // End hasVisited
+
+/******************************************************************************
+	Function: countNewCoords()
+	Description: Update newPositionCounter each time the knight has not 
+		landed on that position
+	Side Effects: 
+	Parameters: 
 	Return: NOT SURE YET
 ******************************************************************************/
-void hasVisited(int beenHere[ROWS][COLUMNS], int* knightX, int* knightY) {
-	for (int track = 0; track < 3; ++track) {
-		beenHere[*knightX][*knightY] = 1;
-	}
-} // End hasVisited
+void countNewCoords(int array[ROWS][COLUMNS], int* newPositionCounter) {
+
+}
+
 /******************************************************************************
 	Function: printChessboard()
 	Description: Prints current knight position on the chessboard
@@ -213,8 +252,14 @@ void hasVisited(int beenHere[ROWS][COLUMNS], int* knightX, int* knightY) {
 void printChessboard(int array[ROWS][COLUMNS], int* knightX, int* knightY) {
 	for (size_t i = 0; i < ROWS; ++i) {
 		for (size_t j = 0; j < COLUMNS; ++j) {
-			printf("%d ", array[i][j]);
+			if (*knightX == i && *knightY == j) {
+				printf("%c   ", 'K');
+			}
+			else {
+				printf("%d   ", array[i][j]); 
+			}			
 		}
+		puts("");
 		puts("");
 	}
 } // End printChessboard
