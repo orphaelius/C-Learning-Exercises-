@@ -1,20 +1,7 @@
 // Knight's Tour //
 
 /*
-Can the knight chess piece move around an empty chessboard
-and touch each of the 64 squares only once?
 
-the knight makes l-shaped moves (two in one directions, then one
-in perpendicular direction. thus, from a square in the middle of an
-empty chessboard, the knight can make eight different moves (0 -7),
-
-- board is represented as an 8*8 2d array (board)
-- each square is initialized to 0
-- a knight's move is described as having a horizontal element
-	and a vertical element (int horizontalMove, int verticalMove?)
-- currentRow and currentColumn indicate the row and column of the
-	knight's positioning. to make a move of type moveNumber, where
-	moveNumber is between 0 and 7, your program uses the statements:
 
 	a) currentRow += vertical[moveNumber]
 	b) currentColumn += horizontal[moveNumber]
@@ -50,7 +37,7 @@ int main(void) {
 	// 2D "chessboard" 
 	int board[ROWS][COLUMNS] = { 0 };
 	// Board to track all "squares" the knight has visited
-	int beenHere[ROWS][COLUMNS] = { 0 }; 
+	int beenHere[ROWS][COLUMNS] = { 0 };
 	// Instructions for user input/knight movement
 	char instructions[OPTIONS][CHARLIM] =
 	{ "(0) to move north 1, east 2",
@@ -99,13 +86,13 @@ int main(void) {
 			moveDirection(board, beenHere, &knightX, &knightY, key);
 			break;
 		case 7:
-			moveDirection(board, beenHere, &knightX, &knightY, key); 
+			moveDirection(board, beenHere, &knightX, &knightY, key);
 			break;
 		case 9:
 			printChessboard(board, &knightX, &knightY);
 			break;
 		case 10:
-			printChessboard(beenHere, &knightX, &knightY); 
+			printChessboard(beenHere, &knightX, &knightY);
 			break;
 		}
 
@@ -158,74 +145,51 @@ int getSwitchKey(int* key) {
 /******************************************************************************
 	Function: moveDirection()
 	Description: Moves knight in a particular direction depending on input
-	Side Effects: Changes current position of knight on chessboard, resets 
-		former position by resetting place to "0"
+	Side Effects: Resets former position of knight by resetting place to "0",
+		changes current position of knight on "chessboard"
 	Parameters: chessboard array, pointers to knightX and knightY, switch key
 	Return: ---
 ******************************************************************************/
 void moveDirection(int board[ROWS][COLUMNS], int beenHere[ROWS][COLUMNS], int* knightX, int* knightY, int key) {
 
 	board[*knightX][*knightY] = 0; // Reset currently position	
+	hasVisited(beenHere, knightX, knightY);
+	int dx = 0; // "Delta" for row
+	int dy = 0; // "Delat" for column
 
-	if (key == 0) {	// North 1, East 2 // 	
-		hasVisited(beenHere, knightX, knightY);
+	switch (key) {
 
-		(*knightX)--; // North 1 		
-		for (int i = 0; i < DOUBLE; ++i) {
-			(*knightY)++; // East 2
-		}		
+	case 0: // North 1, East 2 // 
+		dx = -1; dy = 2;
+		break;
+	case 1: // North 2, East 1 // 
+		dx = -2; dy = 1;
+		break;
+	case 2: // North 2, West 1 //
+		dx = -2; dy = -1;
+		break;
+	case 3: // North 1, West 2 // 
+		dx = -1; dy = -2;
+		break;
+	case 4: // South 1, West 2 // 
+		dx = 1; dy = -2;
+		break;
+	case 5: // South 2, West 1 // 
+		dx = 2; dy = -1;
+		break;
+	case 6: // South 2, East 1 // 	
+		dx = 2; dy = 1;
+		break;
+	case 7: // South 1, East 2 // 
+		dx = 1; dy = 2;
+		break;
 	}
-	else if (key == 1) { // North 2, East 1 // 
-		hasVisited(beenHere, knightX, knightY);  
-		for (int i = 0; i < DOUBLE; ++i) {
-			(*knightX)--;
-		}
-		(*knightY)++;				
-	}
-	else if (key == 2) { // North 2, West 1 // 
-		hasVisited(beenHere, knightX, knightY); 
-		for (int i = 0; i < DOUBLE; ++i) { 
-			(*knightX)--;
-		}
-		(*knightY)--;				
-	}
-	else if (key == 3) { // North 1, West 2 // 	
-		hasVisited(beenHere, knightX, knightY);  
-		(*knightX)--;
-		for (int i = 0; i < DOUBLE; ++i) {
-			(*knightY)--;
-		}				
-	}
-	else if (key == 4) { // South 1, West 2 // 
-		hasVisited(beenHere, knightX, knightY); 
-		(*knightX)++;
-		for (int i = 0; i < DOUBLE; ++i) {
-			(*knightY)--;
-		}		
-	}
-	else if (key == 5) { // South 2, West 1 // 	
-		hasVisited(beenHere, knightX, knightY); 
-		for (int i = 0; i < DOUBLE; ++i) {
-			(*knightX)++;
-		}
-		(*knightY)--;			
-	}
-	else if (key == 6) { // South 2, East 1 // 	
-		hasVisited(beenHere, knightX, knightY); 
-		for (int i = 0; i < DOUBLE; ++i) {
-			(*knightX)++;
-		}
-		(*knightY)++;				
-	}
-	else { // South 1, East 2 // 	
-		hasVisited(beenHere, knightX, knightY);
-		(*knightX)++;
-		for (int i = 0; i < DOUBLE; ++i) {
-			(*knightY)++;
-		}				
-	}
-	board[*knightX][*knightY] = 1;	 
-}
+	// Knight position in row = dx values added to
+	// current position (and same formula for column position)
+	*knightX += dx; 
+	*knightY += dy;
+	board[*knightX][*knightY] = 1; // Value on board = 1
+} // End moveDirection
 
 /******************************************************************************
 	Function: hasVisited()
@@ -234,18 +198,11 @@ void moveDirection(int board[ROWS][COLUMNS], int beenHere[ROWS][COLUMNS], int* k
 	Parameters: board array, hasBeen array
 	Return: NOT SURE YET
 ******************************************************************************/
-
 void hasVisited(int beenHere[ROWS][COLUMNS], int* knightX, int* knightY) {
 	for (int track = 0; track < 3; ++track) {
-		beenHere[*knightX][*knightY] = 1;  
+		beenHere[*knightX][*knightY] = 1;
 	}
-}
-
-
-
-
-
-
+} // End hasVisited
 /******************************************************************************
 	Function: printChessboard()
 	Description: Prints current knight position on the chessboard
@@ -260,5 +217,4 @@ void printChessboard(int array[ROWS][COLUMNS], int* knightX, int* knightY) {
 		}
 		puts("");
 	}
-
-}
+} // End printChessboard
