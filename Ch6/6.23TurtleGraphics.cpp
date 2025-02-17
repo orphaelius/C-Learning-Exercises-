@@ -1,10 +1,10 @@
 /******************************************************************************
 
-							// Turtle Graphics //
+				// Turtle Graphics //
 
 	This program tracks a turtle as it moves along a two-dimensional array
-		using various user inputs. The turtle may trace its path using a pen
-		and this path may be displayed on the screen at-will.
+	using various user inputs. The turtle may trace its path using a pen
+	and this path may be displayed on the screen at-will.
 
 	Written by: Jon-Austin
 
