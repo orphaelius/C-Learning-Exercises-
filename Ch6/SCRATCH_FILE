@@ -1,0 +1,190 @@
+/*******************************************************************************
+*
+                              // Eight Queens //
+
+    This program etc
+
+    Written by: Orphaelius
+
+    Date: 02/16/2025
+
+*******************************************************************************/
+
+/*
+is it possible to place eight queens on an empty chessboard so that no queen
+is attacking any other? ie, no two queens are in the same row, the same column,
+or along the sae diagonal. formulate a heuristic for solving this problem.
+
+run the program.
+
+hint- it is possible to assign a numeric value to each square of the chessboard
+indicating how many squares of an empty chessboard are 'eliminated' once a queen
+is placed in that square. for example, each of the for corners would be assigned
+the vaule 22 as illustrated:
+
+*  *  *  *  *  *  *  *
+*  *
+*     *
+*        *
+*           *
+*              *
+*                *
+*                   *
+
+once the elimination numbers are placed in all 64 squares, an appropriate
+heuristic might be: place the next queen in the square with the smallest
+elimination number.
+*/
+
+/*
+NEEDS
+----------------
+queen x and y positions-- how to set for 8 different queens?
+    queen1, etc?
+
+
+
+VARIABLES
+----------------
+chessboard array 8 * 8
+queen1x
+queen1y
+chessboard[queenx][queeny] = 1
+
+
+
+
+FUNCTIONS
+----------------
+
+queen moves function(array, queen x and ys [how to pass 8 queens?])
+
+
+*/
+
+#include <stdio.h>
+#include <stdlib.h> 
+
+#define ROWS 8
+#define COLUMNS 8
+
+void displayDescription(void);
+int makeChessboard(int chessboard[ROWS][COLUMNS]);
+void moveQueens(int chessboard[ROWS][COLUMNS], int queenX, int queenY);
+void printChessboard(int chessboard[ROWS][COLUMNS], int queen1X, int queen1Y);
+
+/*******************************************************************************
+    Function: main()
+    Description: Takes user input, process, prints output..
+    Parameters: ---
+    Return: ---
+*******************************************************************************/
+int main(void) {
+    int chessboard[ROWS][COLUMNS] = { 0 };
+    int currentSolutions[ROWS] = 0;
+            
+    int queen1X = 4;
+    int queen1Y = 4;
+    chessboard[queen1X][queen1Y] = 9;
+
+    displayDescription();
+    makeChessboard(chessboard);
+    printChessboard(chessboard, queen1X, queen1Y);
+
+    return 0;
+}
+
+void displayDescription(void) {
+    printf("%s%s%s", "This program is inspired by the 'Eight Queens' experimeent,\n",
+        "which asks if 8 queens may be positioned along a chessboard so that",
+        "no queens are attacking each other.\n");
+} // End displayDescription
+
+int makeChessboard(int chessboard[ROWS][COLUMNS]) {
+    for (size_t i = 0; i < ROWS; ++i) {
+        for (size_t j = 0; j < COLUMNS; ++j) {
+            chessboard[i][j] = 1;
+        }
+        puts("");
+    }
+    return chessboard[ROWS][COLUMNS];
+} // End make chessboard
+
+
+void moveQueens(int chessboard[ROWS][COLUMNS], int queen1X, int queen1Y) {
+    /*
+    Let's think about this. 
+    -----------------------
+    - 8 queens.
+    - this means there can only be 1 queen in each row (a queen may attack 
+        the same row, diagonally, or the same column) and each column
+    - now this looks something like this:
+    - storage for safe solutions
+    
+    currentSolution[8] - 8 element array, each element will have column 
+        position of the safe position (index is row, value is column
+
+    for loops
+    #row 0
+    for col0 = 0 - 7
+        currentSolution[0] = col0
+
+        #row1
+        for col1 = 0 - 7
+            if safe to put queen in (row1, col1) then
+                currentSolution[1] = col1
+
+                *******************
+                #row7
+                for col1 = 0 - 7
+                    if isSafe(row7, col7) then
+                        currentSolution[7] = col7
+                        # solution found here!!
+                    end if
+                next col7
+                ******************
+
+            end if
+            
+        next col1
+       
+    next col0
+    
+    
+    */
+}
+
+int isSafe(int testRow, int testColumn, int currentSolution[ROWS]) {
+    int safe = 1;
+
+    for (int row = 0; row < testRow - 1; row++) {
+
+        if (currentSolution[row] == testColumn) { // vertical alignment
+            return 0; // "false"
+        }
+
+        // diagonal alignment
+        // left side says how many rows above, right side says how many
+        // columns
+        if (abs(testRow - row) == abs(testColumn - currentSolution[row])) {  
+            return 0; // "false"
+        }
+    }
+    return 1;  // "true"
+} // End isSafe
+
+void printChessboard(int chessboard[ROWS][COLUMNS], int queen1X, int queen1Y) { 
+    for (size_t i = 0; i < ROWS; ++i) {
+        for (size_t j = 0; j < COLUMNS; ++j) {
+            if (queen1X == i && queen1Y == j) { 
+                printf("%d   ", 9);
+            }
+            else {
+                printf("%d   ", chessboard[i][j]); 
+            }
+            
+        }
+        puts("");
+        puts("");
+    }
+} // End printChessboard
