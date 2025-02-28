@@ -1,65 +1,55 @@
-#include <stdio.h>
-#define SIZE 10
+/*******************************************************************************
 
-void exchange(float* x, float* y);
-int evaluate(int* x, int (*poly)(int));
- 
+                       // Opaque Box Puzzle //
+
+    Program...
+
+    Written by: Deitel, except some of my rogue syntax addendums
+
+    Date: 02/24/2025
+
+*******************************************************************************/
+
+/*
+a dice can be 1-6 inclusive
+two players in game
+player shakes box
+if die shows an even number, A wins
+if die shows an odd number, B wins
+create decision table
+    number on die       odd/even        winner
+
+
+INCLUDE
+stdio
+time
+stdlib
+
+
+CONST
+
+
+VARIABLE
+key = 0;
+
+returned 1 or 0 for switch statement, loops inside statement 6 times
+
+
+FUNCTION
+check if odd/even, return 1 or 0
+determine winner
+print shaking box....
+print open box?
+roll die
+print formatted results
+
+
+
+*/
+
 int main(void) {
-	float numbers[SIZE] = { 0.0, 1.1, 2.2, 3.3, 4.4, 5.5, 6.6, 7.7,
-						8.8, 9.9 };
-	float* nPtr = 0; 
-
-	nPtr = &numbers[3]; // Element 3
-	nPtr = numbers; // First element  
-
-	for (size_t i = 0; i < SIZE; ++i) { // Print numbers array normally
-		printf("%.1f ", numbers[i]);
-	}
-	puts("");
-
-	for (size_t i = 0; i < SIZE; ++i) { // Print numbers array using pointer/offset notation
-		printf("%.1f ", *(numbers + i)); // Using array name as the pointer
-	}
-	puts("");
-
-	for (size_t i = 0; i < SIZE; ++i) { 
-		printf("%.1f ", *(numbers + i)); // Using the pointer
-	}
-	puts("");
-
-	for (size_t i = 0; i < SIZE; ++i) { 
-		printf("%.1f ", nPtr[i]); // Using the pointer and subscript notation
-	}
-	puts("");
-
-	// numbers[3] (element 3 using subscript and array name)
-	// *(numbers + 3) (element 3 using pointer/offset notation with the array name as the pointer
-	// nPtr[3] (element 3 usnig subscript notation and the pointer)
-	// *(nPtr + 3) (element 3 using pointer/offset notation with the pointer itself
-	// 
-
-	printf("\n");
-	printf("\n");
-
-	///////////////////////////////////////////////////////////////////////////
-
-	float number1 = 7.3;
-	float number2 = number1;
-
-	float* fPtr = &number1; // fPtr points to the float object number1
-
-	printf("%f\n", *fPtr);
-	printf("%f\n", number2);
-	printf("%p\n", &number1);
-	printf("%p\n", fPtr);
-
-	///////////////////////////////////////////////////////////////////////////
-
-
-
-
-	
-
+   
 
 
 }
+
