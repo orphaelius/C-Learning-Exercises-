@@ -1,12 +1,22 @@
 /*******************************************************************************
 
-							// MAZE GENERATOR //
+				// MAZE GENERATOR //
 
-	This program combines exercises 7.25- 7.27. 
+	This program combines 7.25-7.27. Initially, the program only generated 
+ 	a maze of a defined width and height at compile time and found the path. 
+  	The cells were manually initialized. Afterwards, the program was modified 
+   	to produce this effect via user input- requesting specific dimensions
+    	for the size of the maze. The program was then modified to generate a
+     	maze entirely at random, and the final product is a combination of all 
+      	these into a fluid program that requests user input for a maze size, 
+       	then it generates the maze of that size (within bounds), determines
+	a fully randomized path within those parameters, prints this generated
+ 	maze, and then it calls a function to recursively find the path. The
+  	final maze is printed to console.
 
 	Written by: Jon-Austin Tharpe
 
-	Date: 02/11/2025
+	Date: 04/01/2025
 
 *******************************************************************************/
 #include <stdio.h>
