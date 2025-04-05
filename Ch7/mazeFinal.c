@@ -27,18 +27,6 @@
 #define WIDTH 30
 #define HEIGHT 30 
 
-#define RESET   "\x1b[0m"
-#define RED     "\x1b[31m"
-#define GREEN   "\x1b[32m"
-#define BLUE    "\x1b[34m"
-#define CYAN    "\x1b[36m"
-#define YELLOW  "\x1b[33m"
-#define MAGENTA "\x1b[35m"
-#define BOLD    "\x1b[1m"
-
-
-
-
 /*******************************************************************************
 	Structure: Celltype
 	Description: enum struct to store the 'types' of cells represented by the
@@ -288,21 +276,23 @@ void printMaze(Maze* mPtr) {
 		for (int j = 0; j < (*mPtr).width; j++) {  // Loop over columns 
 			// Print the character representation of the cell
 			switch ((*mPtr).grid[i][j]) {
-			case START:
-				printf(BOLD GREEN "  S" RESET);
-				break;
-			case FINISH:
-				printf(BOLD RED "  E" RESET);
+			case WALL:
+				printf("  #");
 				break;
 			case PATH:
-				printf(CYAN "  ." RESET);
+				printf("  .");
+				break;
+			case START:
+				printf("  S");
+				break;
+			case FINISH:
+				printf("  E");
 				break;
 			case VISITED:
-				printf(YELLOW "  x" RESET);
+				printf("  x");
 				break;
-			case WALL:
-				printf(BOLD "  #" RESET);
-				break;
+			default:
+				printf("  ?");
 
 		}
 		printf("\n\n"); // Add spacing for better readability
