@@ -251,9 +251,9 @@ int recursivePath(Maze* mPtr, int spriteX, int spriteY) {
 	(*mPtr).grid[spriteX][spriteY] = VISITED;
 
 	// Explore neighboring cells (down, up, right, left)
-	if (spriteX + 1 < mPtr->height && recursivePath(mPtr, spriteX + 1, spriteY)) return 1;
+	if (spriteX + 1 < (*mPtr)height && recursivePath(mPtr, spriteX + 1, spriteY)) return 1;
 	if (spriteX - 1 >= 0 && recursivePath(mPtr, spriteX - 1, spriteY)) return 1;
-	if (spriteY + 1 < mPtr->width && recursivePath(mPtr, spriteX, spriteY + 1)) return 1;
+	if (spriteY + 1 < (*mPtr)width && recursivePath(mPtr, spriteX, spriteY + 1)) return 1;
 	if (spriteY - 1 >= 0 && recursivePath(mPtr, spriteX, spriteY - 1)) return 1;
 
 	(*mPtr).grid[spriteX][spriteY] = temp; // backtrack
