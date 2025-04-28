@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include "cipher.h"
+// #include "cipher.h"
 #define MAXINPUT 150
-  
-int checkKey(char secretKeyString[], int* isFalse);
+
+void checkKey(char secretKeyString[], int* isFalse);
 void getString(char string[]);
+void getSubstitution(char secretKeyChar, char charFromString, int toEncrypt);
 
 int main(void) {
 	char secretKeyString[MAXINPUT] = { "" };
@@ -15,36 +16,42 @@ int main(void) {
 	checkKey(secretKeyString, &isFalse);
 	
 
-	
-
-
-
 	return 0;
 }
 
-int checkKey(char secretKeyString[], int* isFalse) {
-	
-	for (size_t i = 0; i < strlen(secretKeyString); ++i) { 
-		if (isalpha(secretKeyString[i]) == 0 && secretKeyString[i] != ' ') {   
-			printf("%c\n", secretKeyString[i]); 
+
+void getString(char string[]) {
+	fgets(string, MAXINPUT, stdin);
+	string[strlen(string) - 1] = '\0';
+} // End inputString()
+
+void checkKey(char secretKeyString[], int* isFalse) {
+
+	for (size_t i = 0; i < strlen(secretKeyString); ++i) {
+		if (isalpha(secretKeyString[i]) == 0 && secretKeyString[i] != ' ') {
+			printf("%c\n", secretKeyString[i]);
 			(*isFalse)++;
 			break;
-		}	
+		}
 	}
-
 	//printf("isfalse value %d\n", isFalse);
-
 	if (isFalse != 0) {
 		printf("secret key contains non-letters\n");
 	}
 	else {
 		printf("secret key contains only letters\n");
-	}
-
-	return *isFalse;	 
+	}	
 } // End checkKey()
 
-void getString(char string[]) {
-	fgets(string, MAXINPUT, stdin);
-	string[strlen(string) - 1] = '\0';	
-} // End inputString()
+
+void getSubstitution(char secretKeyChar, char charFromString, int toEncrypt) {
+	char vigenere_square[26][26];
+
+	for (size_t i = 0; i < 26; i++) {
+		for (size_t j = 0; j < 26; j++) {
+			vigenere_square[i][j] = 'A' + (i + j) % 26;
+		}
+	}
+} // End getSubstitution()
+
+void encrypt(char stringToEncrypt[], char encryptedString[], char secretKeyString[])
