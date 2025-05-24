@@ -1,3 +1,26 @@
+/******************************************************************************
+* 
+							// VIGENERE CIPHER //
+
+		This program follows exercises 8.41 & 8.42, which instruct a subject to
+		create a working Vigenere Cipher that takes input for a secret key, 
+		encrypts an input message using that key, and offers the capability to 
+		decrypt a message using an input key as well. Added QOL functionality
+		like a repeated menu system that allows a user to select from several 
+		options until electing to exit, etc. This program accepts most normal 
+		ASCII characters and whitespace as input, ignoring any input that is 
+		non-alphabetical in nature as the program iterates through a string in
+		order to encrypt or decrypt. The exercise asks a subject explicitly 
+		to separate two of the function prototypes into a separate header file, 
+		and I added most function prototypes to that file instead of only
+		two.
+		
+		User MUST enter only alphabetical characters for the secret key. 
+
+		Written by: Jon-Austin
+
+******************************************************************************/
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -6,34 +29,28 @@
 #define LETTERS 26
 
 void initializeVigenere(char vigenereSquare[LETTERS][LETTERS]);  
-void checkKey(char secretKey[], int* isFalse);
-void getString(char string[]);
-void encrypt(char* secretKey, char* stringToEncrypt, char* encryptedString); 
-void decrypt(char* secretKey, char* decryptedString, char* stringToDecrypt);
-int getKey(int* switchKey);  
-void showInstructions(void); 
-void rinsePalate(); 
 
 int main(void) {
-	//char* secretKey = "XMWUJBVYHXZ"; -- key given in exercise
+	//char* secretKey = "XMWUJBVYHXZ"; -- key given in exercise to try
 	char secretKey[MAXINPUT] = { "" };
 	char stringToEncrypt[MAXINPUT] = { "" };
 	char encryptedString[MAXINPUT] = { "" };
 	char decryptedString[MAXINPUT] = { "" };
 	char stringToDecrypt[MAXINPUT] = { "" };
-	char vigenereSquare[LETTERS][LETTERS];
+	// char vigenereSquare[LETTERS][LETTERS]; use to initialize a printable vigenere square
 	int isFalse = 0;
-	int switchKey = 0;
-	showInstructions();
-	while ((*switchKey = getKey(&switchKey)) != -1) { 
+	int switchKey = 0;	
 
-		switch (*switchKey) {
+	showInstructions();
+	while ((switchKey = getKey(&switchKey)) != -1) { 
+
+		switch (switchKey) {
 
 		case 1: // Enter Secret key	 
 			printf("Enter an alphabetical secret key: ");
-			rinsePalate();
+			rinsePalate(); // Clears buffer
 			getString(secretKey);
-			checkKey(secretKey, &isFalse);
+			checkKey(secretKey, &isFalse); // Determines if input is alphabetical
 			break;
 
 		case 2: // Encrypt a message	
@@ -46,6 +63,7 @@ int main(void) {
 
 		case 3: // Decrypt a message	
 			printf("Enter a string to decrypt: ");
+			rinsePalate();   
 			getString(stringToDecrypt);
 			printf("Decrypting %s...\n", stringToDecrypt); 
 			decrypt(secretKey, decryptedString, stringToDecrypt);  
@@ -97,7 +115,7 @@ int getKey(int* switchKey) {
 	Function: iuitializeVigenere()
 	Description: Initializes 2D vigenereSquare array with appropriate letters;
 	not currently implemented
-	Parameters: ---
+	Parameters: vigenereSquare[][]
 	Return: ---
 *******************************************************************************/
 void initializeVigenere(char vigenereSquare[LETTERS][LETTERS]) {
@@ -111,7 +129,7 @@ void initializeVigenere(char vigenereSquare[LETTERS][LETTERS]) {
 /*******************************************************************************
 	Function: getString()
 	Description: Grabs user input, null terminates input string
-	Parameters: ---
+	Parameters: Any string[] really
 	Return: ---
 *******************************************************************************/
 void getString(char string[]) {
@@ -123,8 +141,8 @@ void getString(char string[]) {
 	Function: checkKey()
 	Description: Determines if a string (key in this case) contains only
 	letters (alphanumeric); returns 0 if string is all letters, else returns > 0
-	Parameters: ---
-	Return: ---
+	Parameters: secretKey[], points to isFalse
+	Return: No return, but modifies isFalse
 *******************************************************************************/
 void checkKey(char secretKey[], int* isFalse) {
 	for (size_t i = 0; i < strlen(secretKey); ++i) {
@@ -150,7 +168,7 @@ void checkKey(char secretKey[], int* isFalse) {
 	Function: encrypt()
 	Description: Encrypts input string using the secret key, copies encrypted
 	characters to new string
-	Parameters: ---
+	Parameters: 
 	Return: ---
 *******************************************************************************/ 
 void encrypt(char* secretKey, char* stringToEncrypt, char* encryptedString) { 
@@ -158,11 +176,13 @@ void encrypt(char* secretKey, char* stringToEncrypt, char* encryptedString) {
 	int cipherIntValue = 0;
 	int len = strlen(secretKey);
 	char tempString[2]; 
+	encryptedString[0] = '\0'; 
 
 	for (size_t i = 0; i < strlen(stringToEncrypt); ++i) {
-		
+
 		// If char is lowercase, range is [97-122]
 		if (islower(stringToEncrypt[i])) {
+			// converts to its alphabetical index (0 - 25)
 			cipherIntValue = ((int)stringToEncrypt[i] - 97 +
 				(int)tolower(secretKey[i % len]) - 97) % LETTERS + 97;
 			cipher = (char)cipherIntValue; 
@@ -188,19 +208,28 @@ void encrypt(char* secretKey, char* stringToEncrypt, char* encryptedString) {
 	printf("Encrypted string: %s\n", encryptedString);	
 } // End encrypt()
 
-
+/******************************************************************************
+	Function: decrypt()
+	Description: Decrypts a message using secret key input
+	Side Effects: ---
+	Parameters: ---
+	Return: ---
+******************************************************************************/
 void decrypt(char* secretKey, char* decryptedString, char* stringToDecrypt) {
 	char tempString[2];
 	int letterIndex = 0;
 	char cipher;
 	int cipherIntValue;
 	int len = strlen(secretKey);
+	int tempConversion = 0; 
+	decryptedString[0] = '\0';
 
 	for (size_t i = 0; i < strlen(stringToDecrypt); ++i) {
-
+		
 		// if char is lowercase, range is [97-122]
 		if (islower(stringToDecrypt[i])) {
-			cipherIntValue = ((int)stringToDecrypt[i] - 97 - ((int)tolower(secretKey[letterIndex % len]) - 97) + LETTERS) % LETTERS + 97;
+			cipherIntValue = ((int)stringToDecrypt[i] - 97 - 
+				((int)tolower(secretKey[letterIndex % len]) - 97) + LETTERS) % LETTERS + 97;
 			cipher = (char)cipherIntValue;
 			tempString[0] = cipher;
 			tempString[1] = '\0';
@@ -208,17 +237,20 @@ void decrypt(char* secretKey, char* decryptedString, char* stringToDecrypt) {
 			letterIndex++;
 		}
 		else if (isupper(stringToDecrypt[i])) { // if it's uppercase [65-90]
-			cipherIntValue = ((int)stringToDecrypt[i] - 65 - ((int)toupper(secretKey[letterIndex % len]) - 65) + LETTERS) % LETTERS + 65;
+			cipherIntValue = ((int)stringToDecrypt[i] - 65 - 
+				((int)toupper(secretKey[letterIndex % len]) - 65) + LETTERS) % LETTERS + 65;
 			cipher = (char)cipherIntValue;
 			tempString[0] = cipher;
 			tempString[1] = '\0';
 			strcat(decryptedString, tempString);
 			letterIndex++;
 		}
-		else {
-			tempString[0] = stringToDecrypt[i]; 
+		else {			
+			cipher = stringToDecrypt[i];
+			tempString[0] = cipher;
 			tempString[1] = '\0';
-			strcat(decryptedString, tempString); 
+			strcat(decryptedString, tempString);
+			letterIndex++;
 		}
 	}
 	printf("Decrypted string: %s\n", decryptedString);
